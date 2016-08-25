@@ -1,7 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % FUNCTION: function to analyze FORCE (hier_data_IB2d) data from IBAMR
-%           simulations / print them to be opened in VisIT
+%           simulations / print them to be opened in ParaView or VisIt in
+%           VTK format
 %
 % Author: Nick Battista
 % Date: 8/24/16
