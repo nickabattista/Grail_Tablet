@@ -50,6 +50,6 @@ def savevtk_points( X, scalarArray, filename, colorMap):
             fid.write('LOOKUP_TABLE default\n')
             fid.write('\n')
             for c in range(nx):
-                fid.write('{0} '.format(scalarArray[c,1]))
+                fid.write('{0} '.format(scalarArray[c,0]))
                 fid.write('\n')
             #Python 3.5 automatically opens in text mode unless otherwise specified
