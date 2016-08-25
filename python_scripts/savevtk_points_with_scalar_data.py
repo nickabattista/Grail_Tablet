@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-def savevtk_points( X, scalarArray, filename, colorMap):
+def savevtk_points_with_scalar_data( X, scalarArray, filename, colorMap):
     ''' Prints matrix vector data to vtk formated file
     
     Args:
