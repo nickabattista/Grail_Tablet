@@ -37,7 +37,7 @@ def savevtk_points_with_scalar_data( X, scalarArray, filename, colorMap):
     else:
         with open(filename,'w') as file:
             file.write('# vtk DataFile Version 2.0\n')
-            file.write(vectorName+'\n')
+            file.write(colorMap+'\n')
             file.write('ASCII\n')
             file.write('DATASET UNSTRUCTURED_GRID\n\n')
             file.write('POINTS {0} float\n'.format(N))
