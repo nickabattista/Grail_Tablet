@@ -33,7 +33,7 @@ def savevtk_points_with_scalar_data( X, scalarArray, filename, colorMap):
 
     if C_flag == True:
         nX = np.ascontiguousarray(X, dtype=np.float64)
-        write.savevtk_points_write(N,nX,filename,vectorName)
+        write.savevtk_points_write(N,nX,filename,colorMap)
     else:
         with open(filename,'w') as file:
             file.write('# vtk DataFile Version 2.0\n')
