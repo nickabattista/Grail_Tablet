@@ -30,6 +30,7 @@ def savevtk_points_with_scalar_data( X, scalarArray, filename, colorMap):
     # colorMap:  What you are naming the data you're printing (string)
 
     N = X.shape[0]
+    nx,ny = scalarArray.shape
 
     if C_flag == True:
         nX = np.ascontiguousarray(X, dtype=np.float64)
