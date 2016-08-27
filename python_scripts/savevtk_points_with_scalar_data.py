@@ -45,11 +45,11 @@ def savevtk_points_with_scalar_data( X, scalarArray, filename, colorMap):
                 file.write('{0:.15e} {1:.15e} {2:.15e}\n'.format(X[ii,0],X[ii,1],X[ii,2]))
             file.write('\n')
             #
-            fid.write('POINT_DATA   {0}\n'.format(nx*ny*1))
-            fid.write('SCALARS '+colorMap+' double\n')
-            fid.write('LOOKUP_TABLE default\n')
-            fid.write('\n')
+            file.write('POINT_DATA   {0}\n'.format(nx*ny*1))
+            file.write('SCALARS '+colorMap+' double\n')
+            file.write('LOOKUP_TABLE default\n')
+            file.write('\n')
             for c in range(nx):
-                fid.write('{0} '.format(scalarArray[c,0]))
-                fid.write('\n')
+                file.write('{0} '.format(scalarArray[c,0]))
+                file.write('\n')
             #Python 3.5 automatically opens in text mode unless otherwise specified
