@@ -26,7 +26,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [U,V,W,X,Y,Z,Nx,Ny,Nz] = read_Eulerian_Data_From_vtk()
+function [U,V,W,X,Y,Z,Nx,Ny,Nz] = read_Structured_Vector_Field_Data_From_vtk()
 
 print_info();                 % PRINTS SCRIPT INFO
 
@@ -177,10 +177,10 @@ clear filename fileID str strVec count analysis_path;
 
 function print_info()
 
-fprintf('_________________________________________________________________\n\n');
+fprintf('_________________________________________________________________________\n\n');
 fprintf('This script reads in 3D vector field data in .vtk format and...\n');
-fprintf('...returns the following data structures: \n');
+fprintf('     ...returns (outputs) the following data: \n');
 fprintf('          1. U,V,W (the x,y,z components of the velocity)\n');
 fprintf('          2. X,Y,Z (the cartesian grid values\n');
 fprintf('          3. Nx,Ny,Nz (the grid resolution in each respective direction\n\n');
-fprintf('_________________________________________________________________\n\n');
+fprintf('__________________________________________________________________________\n\n');
