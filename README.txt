@@ -10,7 +10,7 @@ Email: battistn[at]tcnj.edu
 Lab website: http://battistn.pages.tcnj.edu/
 Github: http://github.org/nickabattista
 
-Dept of Math and Statistics
+Dept of Mathematics and Statistics
 School of Science
 The College of New Jersey (TCNJ)
 
