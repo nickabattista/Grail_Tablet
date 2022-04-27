@@ -12,19 +12,20 @@
 %
 %--------------------------------------------------------------------------------------------------------------------%
 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% FUNCTION: Reads in the velocity data field from .vtk format
+% FUNCTION: Reads in the desired Eulerian data from .vtk format
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [U,V] = read_Eulerian_Velocity_Field_vtk(path,simNums)
+function [e_Data,x,y] = read_Eulerian_Data_From_vtk(path,simNums,strChoice,first)
 
 analysis_path = pwd; % Store path to analysis folder!
 
 cd(path);
 
-filename = ['u.' num2str(simNums) '.vtk'];  % desired EULERIAN-DATA.xxxx.vtk file
+filename = [strChoice '.' num2str(simNums) '.vtk'];  % desired EULERIAN-DATA.xxxx.vtk file
 
 fileID = fopen(filename);
 if ( fileID== -1 )
@@ -52,10 +53,32 @@ if ~strcmp( str(1:3), 'DIM')
     str = fgets(fileID);
 end
 
-% Store grid info
-Nx = sscanf(str,'%*s %f %*f %*s',1);
-Ny = sscanf(str,'%*s %*f %f %*s',1);
+ % Store grid info
+N = sscanf(str,'%*s %f %f %*s',2);
+Nx = N(1); Ny = N(2);
 
+% bypass lines in header %
+str = fgets(fileID);
+str = fgets(fileID);
+str = fgets(fileID);
+
+% Store grid resolution if necessary %
+if first == 1
+    dx = sscanf(str,'%*s %f %*f %*f',1);
+    x=0;
+    for i=2:Nx
+        x(i) = x(i-1)+dx;
+    end
+    
+    dy = sscanf(str,'%*s %*f %f %*f',1);
+    y=0;
+    for i=2:Ny
+        y(i) = y(i-1)+dy;
+    end
+    
+else
+    x=1; y=1; % Store arbitrary values
+end
 
 % bypass lines in header %
 str = fgets(fileID);
@@ -63,37 +86,27 @@ str = fgets(fileID);
 str = fgets(fileID);
 str = fgets(fileID);
 str = fgets(fileID);
-str = fgets(fileID);
-str = fgets(fileID);
-
 
 % get formatting for reading in data from .vtk in fscanf %
 strVec = '%f';
-for i=2:3*Nx
+for i=2:Nx
     strVec = [strVec ' %f'];
 end
 
 % read in the vertices %
-[e_Data,count] = fscanf(fileID,strVec,3*Nx*Ny);
-if count ~= 3*Nx*Ny
-   error('Problem reading in Eulerian Data.'); 
+[e_Data,count] = fscanf(fileID,strVec,Nx*Ny);
+if count ~= Nx*Ny
+   error('\nProblem reading in Eulerian Data.'); 
 end
 
 % reshape the matrix into desired data type %
-e_Data = reshape(e_Data, 3, count/3); % Reshape (3*Nx*Nx,1) vector to (Nx*Nx,3) matrix
-e_Data = e_Data';                     % Store vertices in new matrix
+e_Data = reshape(e_Data, Nx, count/Nx); % Reshape vector -> matrix (every 3 entries in vector make into matrix row)
+e_Data = e_Data';                       % Store vertices in new matrix
 
-U = e_Data(:,1);       % Store U data
-V = e_Data(:,2);       % Store V data
+fclose(fileID);                         % Closes the data file.
 
-U = reshape(U,Nx,Ny)';  % Reshape (Nx*Nx,1) matrix to  (Nx,Nx)
-V = reshape(V,Nx,Ny)';  % Reshape (Nx*Nx,1) matrix to  (Nx,Nx)
- 
-fclose(fileID);         % Closes the data file.
+cd ..;                                  % Change directory back to ../viz_IB2d/ directory
 
-cd ..;                  % Change directory back to ../viz_IB2d/ directory
+cd(analysis_path);                      % Change directory back to Data Analysis Folder
 
-cd(analysis_path);      % Change directory back to Data Analysis Folder
-
-clear filename fileID str strVec count analysis_path e_Data Nx;
-
+clear filename fileID str strVec count analysis_path;

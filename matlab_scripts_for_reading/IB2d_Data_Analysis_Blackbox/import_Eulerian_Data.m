@@ -5,21 +5,10 @@
 %	Peskin's Immersed Boundary Method Paper in Acta Numerica, 2002.
 %
 % Author: Nicholas A. Battista
-% Email:  nick.battista@unc.edu
+% Email:  battistn@tcnj.edu
 % Date Created: May 27th, 2015
-% Institution: UNC-CH
-%
-% This code is capable of creating Lagrangian Structures using:
-% 	1. Springs
-% 	2. Beams (*torsional springs)
-% 	3. Target Points
-%	4. Muscle-Model (combined Force-Length-Velocity model, "HIll+(Length-Tension)")
-%
-% One is able to update those Lagrangian Structure parameters, e.g., spring constants, resting lengths, etc
-% 
-% There are a number of built in Examples, mostly used for teaching purposes. 
-% 
-% If you would like us to add a specific muscle model, please let Nick (nick.battista@unc.edu) know.
+% Date Modified: April 27th, 2022
+% Institution: TCNJ
 %
 %--------------------------------------------------------------------------------------------------------------------%
 
@@ -29,39 +18,110 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function [x,y,Omega,P,uMag,uX,uY,U,V,Fx,Fy] = import_Eulerian_Data(path,numSim)
+function [x,y,Omega,P,uMag,uX,uY,U,V,Fx,Fy,C] = import_Eulerian_Data(path,numSim,Eulerian_Flags)
 
+    %
+    % EULERIAN FLAGS FOR WHAT GETS SPIT OUT %
+    % 
+    %Eulerian_Flags(1):   OMEGA
+    %Eulerian_Flags(2):   PRESSURE
+    %Eulerian_Flags(3):   uMAG
+    %Eulerian_Flags(4):   uX (mag. x-component of velocity)
+    %Eulerian_Flags(5):   uY (mag. x-component of velocity)
+    %Eulerian_Flags(6):   uVEC (x,y-components of velocity: U,V)
+    %Eulerian_Flags(7):   Fx (x-component of force )
+    %Eulerian_Flags(8):   Fy (y-component of force)
+    %Eulerian_Flags(9):   Concentration
+    %
+
+    
+analysis_path = pwd;
+    
 % read in Vorticity %
-strChoice = 'Omega'; first = 1;
-[Omega,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+if Eulerian_Flags(1)
+    strChoice = 'Omega'; first = 1;
+    [Omega,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+else
+    Omega=[];
+end
+
 
 % read in Pressure %
-strChoice = 'P'; first = 0;
-[P,~,~] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+if Eulerian_Flags(2)
+    strChoice = 'P'; first = 1;
+    [P,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+else
+    P=[];
+end
+
 
 % read in Velocity Magnitude %
-strChoice = 'uMag'; first = 0;
-[uMag,~,~] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+if Eulerian_Flags(3)
+    strChoice = 'uMag'; first = 1;
+    [uMag,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+else
+    uMag=[];
+end
 
 % read in x-directed Velocity Magnitude %
-strChoice = 'uX'; first = 0;
-[uX,~,~] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+if Eulerian_Flags(4)
+    strChoice = 'uX'; first = 1;
+    [uX,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+else
+    uX=[];
+end
 
 % read in y-directed Velocity Magnitude %
-strChoice = 'uY'; first = 0;
-[uY,~,~] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+if Eulerian_Flags(5)
+    strChoice = 'uY'; first = 1;
+    [uY,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+else
+    uY=[];
+end
 
 % read in x-directed Forces %
-strChoice = 'Fx'; first = 0;
-[Fx,~,~] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+if Eulerian_Flags(7)
+    strChoice = 'Fx'; first = 1;
+    [Fx,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+else
+    Fx=[];
+end
 
 % read in y-directed Forces %
-strChoice = 'Fy'; first = 0;
-[Fy,~,~] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+if Eulerian_Flags(8)
+    strChoice = 'Fy'; first = 1;
+    [Fy,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+else
+    Fy=[];
+end
+
+% read in Concentration %
+if Eulerian_Flags(9)
+    strChoice = 'concentration'; first = 1;
+    [C,x,y] = read_Eulerian_Data_From_vtk(path,numSim,strChoice,first);
+else
+    C=[];
+end
 
 % read in Velocity Field %
-[U,V] = read_Eulerian_Velocity_Field_vtk(path,numSim);
+if Eulerian_Flags(6)
+    [U,V] = read_Eulerian_Velocity_Field_vtk(path,numSim);
+else
+    U=[];
+    V=[];
+end
 
+% Default for x,y values
+if max(Eulerian_Flags([1:5,7:9]))==0
+    x=[];
+    y=[];
+end
+
+cd(analysis_path);
+
+clear analysis_path;
 
 clear strChoice first;
+
+
 

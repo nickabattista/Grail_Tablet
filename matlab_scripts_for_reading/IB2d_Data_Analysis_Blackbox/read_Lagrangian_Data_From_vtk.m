@@ -5,21 +5,10 @@
 %	Peskin's Immersed Boundary Method Paper in Acta Numerica, 2002.
 %
 % Author: Nicholas A. Battista
-% Email:  nick.battista@unc.edu
+% Email:  battistn@tcnj.edu
 % Date Created: May 27th, 2015
-% Institution: UNC-CH
-%
-% This code is capable of creating Lagrangian Structures using:
-% 	1. Springs
-% 	2. Beams (*torsional springs)
-% 	3. Target Points
-%	4. Muscle-Model (combined Force-Length-Velocity model, "HIll+(Length-Tension)")
-%
-% One is able to update those Lagrangian Structure parameters, e.g., spring constants, resting lengths, etc
-% 
-% There are a number of built in Examples, mostly used for teaching purposes. 
-% 
-% If you would like us to add a specific muscle model, please let Nick (nick.battista@unc.edu) know.
+% Date Modified: April 27th, 2022
+% Institution: TCNJ
 %
 %--------------------------------------------------------------------------------------------------------------------%
 
@@ -35,7 +24,7 @@ function [xLag,yLag] = read_Lagrangian_Data_From_vtk(path,simNums)
 
 cd(path);
 
-filename = ['lagsPts.' num2str(simNums) '.vtk'];  % desired lagPts.xxxx.vtk file
+filename = ['lagsPts.' num2str(simNums) '.vtk'];  % desired lagsPts.xxxx.vtk file
 
 fileID = fopen(filename);
 if ( fileID== -1 )
@@ -52,8 +41,18 @@ str = fgets(fileID);
 str = fgets(fileID);
 str = fgets(fileID);
 str = fgets(fileID);
-str = fgets(fileID);
+str = fgets(fileID); % Up to white space in previous lagsPts.X files (pre June 2021)
 
+% Check whether VTK file has time info. This is a VTK file with time, 
+%       need to read the next 3 lines to have read in appropriate
+%       number of header lines.
+if ~strcmp( str(1), 'P')
+	str = fgets(fileID);
+    str = fgets(fileID);
+    str = fgets(fileID);
+end
+
+    
 % stores # of Lagrangian Pts. as stated in .vtk file
 numLagPts = sscanf(str,'%*s %f %*s',1); 
 
