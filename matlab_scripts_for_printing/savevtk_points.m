@@ -2,17 +2,16 @@
 %
 % FUNCTION: prints unstructured grid (points) data to VTK formated file
 %
-%
 % Author: Nicholas A. Battista
-% Date: 8/24/16
+% Created: 08/24/16
+% Modified: 04/27/22
 % Github: http://github.org/nickabattista
-% Institution: UNC-CH
-% Lab: Laura Miller Lab
-%
+% Lab: TCNJ Bioinspiration Lab
+% Institution: TCNJ
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-function savevtk_points( X, filename, vectorName)
+function savevtk_points( X, filename, vectorName, time)
 
 % X is matrix of size Nx3 
 %              Col 1: x-data
@@ -20,15 +19,21 @@ function savevtk_points( X, filename, vectorName)
 %              Col 3: z-data
 % filename:    What you are saving the VTK file as (string)
 % vectorName:  What you are naming the data you're printing (string)
+% time: current time in simulation
 
-N = length( X(:,1) ); % # of unstructured data points
+N = length( X(:,1) );
 
-% PRINTING THEM AS UNSTRUCTURED_GRID
+
+%TRY PRINTING THEM AS UNSTRUCTURED_GRID
 file = fopen (filename, 'w');
 fprintf(file, '# vtk DataFile Version 2.0\n');
 fprintf(file, [vectorName '\n']);
 fprintf(file, 'ASCII\n');
 fprintf(file, 'DATASET UNSTRUCTURED_GRID\n\n');
+%
+fprintf(file, 'FIELD FieldData 1\n');
+fprintf(file, 'TIME 1 1 double\n');
+fprintf(file, '%.8f\n',time);
 %
 fprintf(file, 'POINTS %i float\n', N);
 for i=1:N

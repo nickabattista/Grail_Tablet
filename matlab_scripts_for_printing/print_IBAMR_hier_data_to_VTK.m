@@ -23,7 +23,7 @@ path_name=pwd;
 starting_time=20000; % First time step to be included in data analysis
 time_step=20000;     % Interval between outputted time steps (this should match the interval in the input2d file)
 final_time=600000;   % Final time step to be included in data analysis
-timestep=10^-6;      % Timestep, dt, from the simulation
+timestep=10^(-6);    % Timestep, dt, from the simulation
 time=(starting_time:time_step:final_time)*timestep; % Vector of time from simulation
 
 
